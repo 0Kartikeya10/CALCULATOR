@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      margin-top: 40px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .task-list {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .task-list li {
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .task-list li:last-child {
+      border-bottom: none;
+    }
+
+    .task-list .task-status {
+      margin-right: 10px;
+    }
+
+    .task-form input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .task-form button {
+      margin-top: 10px;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .task-form button:hover {
+      background-color: #555;
+    }
+
+    .delete-button,
+    .edit-button {
+      background-color: #ccc;
+      color: #333;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-button:hover,
+    .edit-button:hover {
+      background-color: #999;
+    }
+
+    .completed-tasks {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>To-Do App</h1>
+
+    <div class="task-form">
+      <input type="text" id="taskInput" placeholder="Add a new task">
+      <button onclick="addTask()">Add</button>
+    </div>
+
+    <h2>Pending Tasks</h2>
+    <ul class="task-list" id="pendingTasks"></ul>
+
+    <h2>Completed Tasks</h2>
+    <ul class="task-list completed-tasks" id="completedTasks"></ul>
+  </div>
+
+  <script>
+    var pendingTasks = document.getElementById("pendingTasks");
+    var completedTasks = document.getElementById("completedTasks");
+
+    function addTask() {
+      var taskInput = document.getElementById("taskInput");
+      var taskText = taskInput.value.trim();
+
+      if (taskText !== "") {
+        var taskItem = document.createElement("li");
+        var taskStatus = document.createElement("input");
+        taskStatus.type = "checkbox";
+        taskStatus.className = "task-status";
+        taskStatus.addEventListener("change", updateTaskStatus);
+
+        var taskLabel = document.createElement("span");
+        taskLabel.textContent = taskText;
+
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.className = "delete-button";
+        deleteButton.addEventListener("click", deleteTask);
+
+        var editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.className = "edit-button";
+        editButton.addEventListener("click", editTask);
+
+        taskItem.appendChild(taskStatus);
+        taskItem.appendChild(taskLabel);
+        taskItem.appendChild(deleteButton);
+        taskItem.appendChild(editButton);
+
+        pendingTasks.appendChild(taskItem);
+        taskInput.value = "";
+      }
+    }
+
+    function updateTaskStatus() {
+      var taskItem = this.parentNode;
+      var taskLabel = taskItem.querySelector("span");
+
+      if (this.checked) {
+        taskItem.remove();
+        completedTasks.appendChild(taskItem);
+        taskLabel.style.textDecoration = "line-through";
+      } else {
+        taskItem.remove();
+        pendingTasks.appendChild(taskItem);
+        taskLabel.style.textDecoration = "none";
+      }
+    }
+
+    function deleteTask() {
+      var taskItem = this.parentNode;
+      taskItem.remove();
+    }
+
+    function editTask() {
+      var taskItem = this.parentNode;
+      var taskLabel = taskItem.querySelector("span");
+      var taskText = taskLabel.textContent;
+
+      var updatedTaskText = prompt("Edit the task:", taskText);
+
+      if (updatedTaskText !== null && updatedTaskText.trim() !== "") {
+        taskLabel.textContent = updatedTaskText;
+      }
+    }
+  </script>
+</body>
+</html>
